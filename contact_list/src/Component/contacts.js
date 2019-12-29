@@ -12,7 +12,7 @@ componentDidMount() {
         // console.log(contacts) 
         return ( 
             <div>
-               <table>
+               <table className={`table table-striped`}>
                    <tr>
                     <th>Id</th>
                     <th>Avatar</th>
