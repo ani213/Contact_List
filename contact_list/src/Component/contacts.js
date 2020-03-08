@@ -4,9 +4,12 @@ import {connect} from "react-redux";
 import { setContacts } from './contactState.js';
 import {withStyles} from '@material-ui/core'
 import SearchInput from './common/searchInput.js';
+import AddContact from './AddContact.js';
+
 class Contacts extends Component {
     state = { 
-        search:""
+        search:"",
+        addContactYN:false,
      }
 handleSearch=(e)=>{
     let search=e.target.value;
@@ -20,6 +23,11 @@ handleSearch=(e)=>{
         }
     })
         this.props.setContacts(searchItem)
+}
+showAddContactForm=()=>{
+    this.setState({
+        addContactYN:!this.state.addContactYN
+    })
 }
 componentDidMount() {
 
@@ -42,9 +50,15 @@ componentDidMount() {
                     <h3>Contact List</h3>
                 </div>
                 <div className={classes.tableMainContainer}>
-                <div>
+                <div className={classes.toolBarContainer}>
                     <div className={classes.searchContainer}>
                     <SearchInput value={this.state.search} onChange={this.handleSearch}/>
+                    </div>
+                    <div>
+                     <div className={classes.buttonContainer}>   
+                      <button type="button" className={`btn btn-primary`} onClick={this.showAddContactForm}>Add contact</button>
+                     </div>
+                     {this.state.addContactYN && <AddContact />}
                     </div>
                 </div>
                <table className={`table table-striped`}>
@@ -79,9 +93,16 @@ componentDidMount() {
     }
 }
 const styles=theme=>({
+    toolBarContainer:{
+        display:"flex",
+        justifyContent:"space-between"
+    },
+    buttonContainer:{
+        marginRight:"350px"
+    },
     searchContainer: {
         width: "50%",
-        margin: "10px 20px"
+        margin: "0px 10px 19px 10px"
     },
     tableMainContainer: {
         boxShadow:'0 0 1px 1px #ccc',
