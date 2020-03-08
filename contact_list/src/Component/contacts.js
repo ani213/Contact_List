@@ -41,6 +41,7 @@ componentDidMount() {
                 <div className={classes.heading}>
                     <h3>Contact List</h3>
                 </div>
+                <div className={classes.tableMainContainer}>
                 <div>
                     <div className={classes.searchContainer}>
                     <SearchInput value={this.state.search} onChange={this.handleSearch}/>
@@ -71,25 +72,31 @@ componentDidMount() {
                        }
                    </tbody>
                </table>
+               </div>
             </div>
 
          );
     }
 }
 const styles=theme=>({
-searchContainer:{
-width:"50%",
-margin:"10px 20px"
+    searchContainer: {
+        width: "50%",
+        margin: "10px 20px"
     },
-tr:{
-    "& td":{
-        verticalAlign: "inherit !important",
-    }
-},
-heading:{
-    textAlign:"center",
-    padding:"50px"
-},
+    tableMainContainer: {
+        boxShadow:'0 0 1px 1px #ccc',
+        margin:'0px 30px 0px 30px',
+        padding:'20px 0px 0px 0px'
+    },
+    tr: {
+        "& td": {
+            verticalAlign: "inherit !important",
+        }
+    },
+    heading: {
+        textAlign: "center",
+        padding: "50px"
+    },
 })
 
 const mapStateToProps=(state)=>{
