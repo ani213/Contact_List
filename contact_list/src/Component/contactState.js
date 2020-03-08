@@ -1,5 +1,6 @@
 export const initialState={
      contacts:[],
+     addContactYN:false,
 }
 export const SET_CONTACTS="SET_CONTACTS";
 export const setContacts=(contacts)=>dispatch=>{

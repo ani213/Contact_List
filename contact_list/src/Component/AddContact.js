@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {withStyles} from '@material-ui/core'
+import {withStyles} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 class AddContact extends Component {
     state = {  }
     render() { 
@@ -9,6 +11,9 @@ class AddContact extends Component {
                   <div className={classes.mainContainer}>
                   <div className={classes.formContainer}>
                  <div className={classes.form}>
+                     <div className={classes.closeIcon}>
+                         <IconButton><CloseIcon/></IconButton>
+                     </div>
                    <div className={classes.content}>  
                       <label className={classes.font}>Name</label>  
                       <input type="text" 
@@ -69,6 +74,11 @@ const styles=theme=>({
         height:"400px",
         background:"#39ac73",
         borderRadius:"30px",
+    },
+    closeIcon:{
+        position:"absolute",
+        top:"0px",
+        right:"5px",
     },
     content:{
      display:"flex",

@@ -26,7 +26,12 @@ handleSearch=(e)=>{
 }
 showAddContactForm=()=>{
     this.setState({
-        addContactYN:!this.state.addContactYN
+        addContactYN:true
+    })
+}
+hideAddContactForm=()=>{
+    this.setState({
+        addContactYN:false
     })
 }
 componentDidMount() {
@@ -45,7 +50,7 @@ componentDidMount() {
         let contacts=this.props.contacts.contacts;
         // console.log(contacts) 
         return ( 
-            <div>
+            <div >
                 <div className={classes.heading}>
                     <h3>Contact List</h3>
                 </div>
@@ -54,14 +59,14 @@ componentDidMount() {
                     <div className={classes.searchContainer}>
                     <SearchInput value={this.state.search} onChange={this.handleSearch}/>
                     </div>
-                    <div>
+                    <div >
                      <div className={classes.buttonContainer}>   
                       <button type="button" className={`btn btn-primary`} onClick={this.showAddContactForm}>Add contact</button>
                      </div>
                      {this.state.addContactYN && <AddContact />}
                     </div>
                 </div>
-               <table className={`table table-striped`}>
+               <table className={`table table-striped`} onClick={this.hideAddContactForm}>
                    <tr>
                     <th>Id</th>
                     <th>Avatar</th>
