@@ -2,48 +2,71 @@ import React, { Component } from 'react';
 import {withStyles} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import { handleAddContactForm, addContact } from './contactState';
+import { connect } from 'react-redux';
 class AddContact extends Component {
-    state = {  }
+    state = { 
+        details:{},
+     }
+
+    handleCancle=()=>{
+        this.props.handleAddContactForm(false)
+    }
+  handleSave=()=>{
+
+    this.props.addContact(this.state.details)
+  }
+  handleOnchange=(e)=>{
+    //   console.log(e.target.name,e.target.value)
+      this.setState({
+          details:{...this.state.details,[e.target.name]:e.target.value}
+      })
+  }
     render() { 
         let classes=this.props.classes;
+        // console.log(this.state.details)
         return ( 
                   <div className={classes.relative}>
                   <div className={classes.mainContainer}>
                   <div className={classes.formContainer}>
                  <div className={classes.form}>
                      <div className={classes.closeIcon}>
-                         <IconButton><CloseIcon/></IconButton>
+                         <IconButton onClick={this.handleCancle}><CloseIcon/></IconButton>
                      </div>
                    <div className={classes.content}>  
                       <label className={classes.font}>Name</label>  
                       <input type="text" 
                       className={`form-control`} 
+                      name="firstName"
                       placeholder="Name" 
-                      onChange={(e)=>{this.props.onChange&&this.props.onChange(e)}}/>
+                      onChange={this.handleOnchange}/>
                    </div>
                    <div className={classes.content}>
                    <label className={classes.font}>Last Name</label>
                    <input type="text" 
                    className={`form-control`} 
+                   name="lastName"
                    placeholder="Last Name" 
-                   onChange={(e)=>{this.props.onChange&&this.props.onChange(e)}}/>
+                   onChange={this.handleOnchange}/>
                    </div>
                    <div className={classes.content}>
                     <label className={classes.font}>Email</label>
                    <input type="text" 
                    className={`form-control`} 
                    placeholder="Email" 
-                   onChange={(e)=>{this.props.onChange&&this.props.onChange(e)}}/>
+                   name="email"
+                   onChange={this.handleOnchange}/>
                    </div>
                    <div className={classes.content}>
                     <label className={classes.font}>Phone</label>
                    <input type="text" 
                    className={`form-control`} 
                    placeholder="Phone" 
-                   onChange={(e)=>{this.props.onChange&&this.props.onChange(e)}}/>
+                   name="phone"
+                   onChange={this.handleOnchange}/>
                    </div>
                    <div className={classes.buttonContainer}>
-                       <button type="button" className="btn btn-primary">Save</button>
+                       <button type="button" className="btn btn-primary" onClick={this.handleSave}>Save</button>
                    </div>
                    </div>
                   </div>
@@ -92,4 +115,15 @@ const styles=theme=>({
         textAlign:"center"
     },
 })
-export default withStyles(styles)(AddContact);
+const mapStateToProps=(state)=>{
+    return {
+        store:state.contacts
+    }
+}
+const mapDispatchToProps={
+    handleAddContactForm,
+    addContact,
+
+}
+
+export default withStyles(styles)(connect(mapStateToProps,mapDispatchToProps)(AddContact));

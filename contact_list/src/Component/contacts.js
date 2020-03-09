@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import contacts from "../contact_list.json"
 import {connect} from "react-redux";
-import { setContacts } from './contactState.js';
+import { setContacts, handleAddContactForm } from './contactState.js';
 import {withStyles} from '@material-ui/core'
 import SearchInput from './common/searchInput.js';
 import AddContact from './AddContact.js';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from '@material-ui/core/IconButton';
+
 
 class Contacts extends Component {
     state = { 
         search:"",
-        addContactYN:false,
      }
 handleSearch=(e)=>{
     let search=e.target.value;
@@ -25,19 +27,15 @@ handleSearch=(e)=>{
         this.props.setContacts(searchItem)
 }
 showAddContactForm=()=>{
-    this.setState({
-        addContactYN:true
-    })
+   this.props.handleAddContactForm(true);
 }
 hideAddContactForm=()=>{
-    this.setState({
-        addContactYN:false
-    })
+    this.props.handleAddContactForm(false)   
 }
 componentDidMount() {
 
     let localStorageData = JSON.parse(localStorage.getItem("contact"))
-    console.log(localStorageData)
+    // console.log(localStorageData)
     if(!localStorageData){
     localStorage.setItem("contact", JSON.stringify(contacts))        
     this.props.setContacts(contacts)     
@@ -48,7 +46,7 @@ componentDidMount() {
     render() {
         let classes=this.props.classes
         let contacts=this.props.contacts.contacts;
-        // console.log(contacts) 
+        console.log(this.props.contacts) 
         return ( 
             <div >
                 <div className={classes.heading}>
@@ -63,7 +61,7 @@ componentDidMount() {
                      <div className={classes.buttonContainer}>   
                       <button type="button" className={`btn btn-primary`} onClick={this.showAddContactForm}>Add contact</button>
                      </div>
-                     {this.state.addContactYN && <AddContact />}
+                     {this.props.contacts.addContactYN && <AddContact />}
                     </div>
                 </div>
                <table className={`table table-striped`} onClick={this.hideAddContactForm}>
@@ -72,19 +70,20 @@ componentDidMount() {
                     <th>Avatar</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Phone No</th>
+                    <th colSpan="2">Phone No</th>
                    </tr>
                    <tbody>
                        {
-                           contacts && contacts.map((contact)=>{
+                           contacts && contacts.map((contact,index)=>{
                             //    console.log(contact)
                                return(
                                    <tr className={classes.tr}>
-                                       <td><span>{contact.id}</span></td>
+                                       <td><span>{index+1}</span></td>
                                        <td><span><img src={contact.avatar_url} alt="avatar"/></span> </td>
                                        <td><span>{contact.first_name}</span><span> {contact['last_name']}</span></td>
                                        <td><span>{contact.email}</span></td>
                                        <td><span>{contact.phone}</span></td>
+                                       <td><IconButton><DeleteForeverIcon/></IconButton></td>
                                    </tr>
                                )
                            })
@@ -127,10 +126,12 @@ const styles=theme=>({
 
 const mapStateToProps=(state)=>{
     return {
-          contacts:state.contacts
+          contacts:state.contacts,
     }
 } 
 const mapDispatchToProps={
-    setContacts
+    setContacts,
+    handleAddContactForm,
+
 }
 export default withStyles(styles)(connect(mapStateToProps,mapDispatchToProps)(Contacts));
