@@ -2,13 +2,19 @@
 export const initialState={
      contacts:[],
      addContactYN:false,
-     error:""
-     
+     error:"",
+     success:false,
+     editContact:{id:"",YN:false},
+     editDetails:null
 }
 export const SET_CONTACTS="SET_CONTACTS";
 export const HANDLE_ADD_CONTACT_FORM="HANDLE_ADD_CONTACT_FORM";
 export const ADD_CONTACT="ADD_CONTACT";
 export const CLEAR_ERROR="CLEAR_ERROR";
+export const DELETE_CONTACT='DELETE_CONTACT';
+export const CLEAR_SUCCESS='CLEAR_SUCCESS';
+export const SHOW_EDIT_FORM="SHOW_EDIT_FORM";
+export const EDIT_DETAILS_CHANGE="EDIT_DETAILS_CHANGE"
 
 export const setContacts=(contacts)=>dispatch=>{
 dispatch({
@@ -28,6 +34,36 @@ export const addContact=(contactDetails)=>dispatch=>{
         payload:contactDetails
     })
 }
+export const clearError=()=>dispatch=>{
+    dispatch({
+        type:CLEAR_ERROR
+    })
+}
+export const clearSuccess=()=>dispatch=>{
+    dispatch({
+        type:CLEAR_SUCCESS
+    })
+}
+export const deleteContact=(id)=>dispatch=>{
+dispatch({
+    type:DELETE_CONTACT,
+    payload:id,
+})
+}
+export const showEditForm=(data)=>dispatch=>{
+    dispatch({
+        type:SHOW_EDIT_FORM,
+        payload:data,
+    })
+}
+export const editDetailsChange=(name,value)=>dispatch=>{
+dispatch({
+        type:EDIT_DETAILS_CHANGE,
+        payload:{name:name,value:value}
+})
+}
+
+
 
 export const _validateDetail=(arr,details)=>{
          for(let i=0;i<arr.length;i++){
@@ -59,7 +95,7 @@ export default function contactReducer(state=initialState,{type,payload}){
             console.log(data,"data")
                  if(data=="ALLOK"){
                     let details={
-                        id:oldContacts.length+1,
+                        id:oldContacts[oldContacts.length-1].id+1,
                         first_name:payload.firstName,
                         last_name:payload.lastName,
                         email:payload.email,
@@ -71,16 +107,51 @@ export default function contactReducer(state=initialState,{type,payload}){
                    localStorage.setItem("contact", JSON.stringify(oldContacts))
                    return{
                        ...state,
-                       contacts:oldContacts
+                       contacts:oldContacts,
+                       success:true,
                    }
                 } 
                    else{
                        return{
                            ...state,
-                           error:`${data} is missing`
+                           error:`${data} is required but missing`
                        }
                    }     
-             
+         
+        case DELETE_CONTACT:
+            let newContact=state.contacts.filter((ele)=>{
+                if(ele.id!=payload)
+                {
+                    return ele;
+                }
+            }) 
+            localStorage.setItem("contact", JSON.stringify(newContact))
+            return{
+                ...state,
+                contacts:newContact
+            }
+        case CLEAR_ERROR:
+            return{
+                ...state,
+                error:""
+            }    
+        case CLEAR_SUCCESS:
+            return{
+                ...state,
+                success:false
+            }
+        case SHOW_EDIT_FORM:
+            // console.log("payload",payload)
+            return{
+                ...state,
+                editContact:{id:payload.id,YN:payload.YN},
+                editDetails:payload
+            } 
+        case EDIT_DETAILS_CHANGE:
+           return {
+              ...state,
+              editDetails:{...state.editDetails,[payload.name]:payload.value}
+            }       
         default:
             return state
     }
