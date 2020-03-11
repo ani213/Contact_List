@@ -159,6 +159,9 @@ export default function contactReducer(state=initialState,{type,payload}){
               editDetails:{...state.editDetails,[payload.name]:payload.value}
             }   
         case EDIT_DETAILS:
+                let array=["first_name","last_name","email","phone"];
+                let result=_validateDetail(array,payload)
+                if(result=='ALLOK'){
             let contactDetails=state.contacts.map((ele)=>{
                 if(ele.id==payload.id){
                     return{
@@ -175,10 +178,18 @@ export default function contactReducer(state=initialState,{type,payload}){
             })
             console.log("res",contactDetails)
             localStorage.setItem("contact", JSON.stringify(contactDetails)) 
+        
             return{
                 ...state,
-                contacts:contactDetails
+                contacts:contactDetails,
+                success:true,
             }   
+        }else{
+            return{
+                ...state,
+                error:`${result} should not be empty`
+            }
+        }
         default:
             return state
     }
