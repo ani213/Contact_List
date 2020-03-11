@@ -1,23 +1,35 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { showEditForm, editDetailsChange } from './contactState';
+import { showEditForm, editDetailsChange, editDetails } from './contactState';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import PulseLoader from './common/PulseLoader';
 class EditContact extends Component {
     state = {  }
     handleCancle=()=>{
-        this.props.showEditForm({id:"",YN:false})
+        // this.props.showEditForm({id:"",YN:false})
+        setTimeout(this._cancle, 4000);
     }
    handleOnchange=(e)=>{
      this.props.editDetailsChange(e.target.name,e.target.value)
    } 
+   handleSave=()=>{
+    this.props.editDetails(this.props.store.editDetails);
+    // this.props.showEditForm({id:"",YN:false})
+    setTimeout(this._cancle, 4000);
+   }
+  _cancle=()=>{
+    this.props.showEditForm({id:"",YN:false})
+  }
+
     render() { 
         let classes=this.props.classes
         let details=this.props.store.editDetails
         let data={width:"100%",height:"100%",top:"0", animationDuration: "3s",}
-        console.log(details,"details")
+        let data1={width:"100%",height:"100%",top:"0", animationDuration: "5s",}
+
+        // console.log(details,"details")
         return ( 
             <div className={classes.mainContainer}>
                 <div className={classes.cancleButtonContainer}>
@@ -62,13 +74,8 @@ class EditContact extends Component {
                 <button type="button" className="btn btn-primary" onClick={this.handleSave}>Save</button>
                 </div>
             </div>
-            <div className={classes.pulse_loader} style={{
-                        width: "100%",
-                        height: "100%",
-                        top:"0",
-                        animationDuration: "5s"
-                    }}></div>
-             <PulseLoader style={data}/>       
+             {/* <PulseLoader style={data1}/>     */}
+             {/* <PulseLoader style={data}/>        */}
             </div>
          );
     }
@@ -77,8 +84,7 @@ const styles=theme=>({
 mainContainer:{
     position:"absolute",
     right:"110px",
-    bottom:"-118px",
-    
+    bottom:"-118px", 
 },
 formContainer:{
     width:"300px",
@@ -87,6 +93,9 @@ formContainer:{
     padding:"20px",
     borderRadius:"15px",
     boxShadow: "-20px 25px 6px 3px darkslategrey",
+    animationName: "$for_content",
+    animationIterationCount: "1",
+    animationDuration: "0.4s",
 },
 cancleButtonContainer:{
     float:"right"
@@ -95,35 +104,17 @@ saveButtonContainer:{
     textAlign: "center",
     margin: "12px"
 },
-
-'@keyframes pulse_loader': {
-    "0% ":{
-      opacity: "0",
-      transform: "scale(0)"
-    },
-    "60%": {
-      opacity: "0.1"
-    },
-    "100% ":{
-      opacity: "0",
-      transform: "scale(1)"
-    }
+'@keyframes for_content': {
+  "0% ":{
+   width:"60px",
+   height:"360px",
   },
-  pulse_loader:{
-    height: "200px",
-    margin: "auto 0",
-    width: "200px",
-    animationName: "$pulse_loader",
-    animationIterationCount: "infinite",
-    animationDuration: "7s",
-    boxShadow: "0 0 5px #6290D1",
-    borderRadius: "50%",
-    border: "3px solid #6290D1",
-    content: '',
-    display: "block",
-    opacity: "0",
-    position: "absolute",
-  } 
+  "100% ":{
+      width:"300px",
+      height:"360px",
+  }
+},
+  
 })
 
 const mapStateToProps=(state)=>{
@@ -133,7 +124,9 @@ const mapStateToProps=(state)=>{
 }
 const mapDispatchToProps={
     showEditForm,
-    editDetailsChange
+    editDetailsChange,
+    editDetails,
+
 
 
 } 

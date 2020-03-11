@@ -54,6 +54,7 @@ componentDidMount(){
                      <div className={classes.closeIcon}>
                          <IconButton onClick={this.handleCancle}><CloseIcon/></IconButton>
                      </div>
+                  <form onSubmit={this.handleSave}>
                    <div className={classes.content}>  
                       <label className={classes.font}>Name<span className={classes.fontColor}>*</span></label>  
                       <input type="text" 
@@ -72,7 +73,7 @@ componentDidMount(){
                    </div>
                    <div className={classes.content}>
                     <label className={classes.font}>Email<span className={classes.fontColor}>*</span></label>
-                   <input type="text" 
+                   <input type="email" 
                    className={`form-control`} 
                    placeholder="Email" 
                    name="email"
@@ -80,7 +81,7 @@ componentDidMount(){
                    </div>
                    <div className={classes.content}>
                     <label className={classes.font}>Phone <span className={classes.fontColor}>*</span></label>
-                   <input type="text" 
+                   <input type="number" 
                    className={`form-control`} 
                    placeholder="Phone" 
                    name="phone"
@@ -90,6 +91,7 @@ componentDidMount(){
                        { this.props.store.error && <p className={classes.fontColor}>{this.props.store.error} </p>}
                        <button type="button" className="btn btn-primary" onClick={this.handleSave}>Save</button>
                    </div>
+                   </form>
                    </div>
                   </div>
                 </div> 
@@ -98,7 +100,7 @@ componentDidMount(){
 }
 const styles=theme=>({
     relative:{
-        position:"relative"
+        position:"relative",
     },
     mainContainer:{
     position:"absolute",
@@ -107,12 +109,34 @@ const styles=theme=>({
     borderStyle:"solid",
     borderColor:'#39ac73 transparent transparent transparent',
     left:"33px",
-    width:"20px"
+    width:"20px",
     },
+    '@keyframes pulse_loader': {
+        "0% ":{
+         width:"300px",
+         height:"0px",
+        },
+        "100% ":{
+            width:"300px",
+            height:"450px",
+        }
+      },
+      '@keyframes for_content': {
+        "0% ":{
+         width:"60%",
+         height:"60%",
+        },
+        "100% ":{
+            width:"100%",
+            height:"100%",
+        }
+      },
+
     formContainer:{
        position:"absolute",
+       top:"0px",
        left:"-150px",
-       zIndex:"999"
+       zIndex:"999",
     },
     form:{
         paddingTop:"20px",
@@ -122,6 +146,9 @@ const styles=theme=>({
         // background:"#3c9681",
         borderRadius:"30px",
         boxShadow: "-20px 25px 6px 3px darkslategrey",
+        animationName: "$pulse_loader",
+        animationIterationCount: "1",
+        animationDuration: "1s",
     },
     closeIcon:{
         position:"absolute",
@@ -129,9 +156,12 @@ const styles=theme=>({
         right:"5px",
     },
     content:{
-     display:"flex",
-     flexFlow:"column",
-     padding:"0px 15px 15px 15px"
+     padding:"0px 15px 15px 15px",
+     animationName: "$for_content",
+     animationIterationCount: "1",
+     animationDuration: "1s",
+     
+
     },
     font:{
         fontWeight:"bold"

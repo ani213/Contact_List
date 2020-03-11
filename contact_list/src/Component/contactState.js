@@ -14,7 +14,8 @@ export const CLEAR_ERROR="CLEAR_ERROR";
 export const DELETE_CONTACT='DELETE_CONTACT';
 export const CLEAR_SUCCESS='CLEAR_SUCCESS';
 export const SHOW_EDIT_FORM="SHOW_EDIT_FORM";
-export const EDIT_DETAILS_CHANGE="EDIT_DETAILS_CHANGE"
+export const EDIT_DETAILS_CHANGE="EDIT_DETAILS_CHANGE";
+export const EDIT_DETAILS="EDIT_DETAILS"
 
 export const setContacts=(contacts)=>dispatch=>{
 dispatch({
@@ -62,7 +63,12 @@ dispatch({
         payload:{name:name,value:value}
 })
 }
-
+export const editDetails=(data)=>dispatch=>{
+    dispatch({
+        type:EDIT_DETAILS,
+        payload:data,
+    })
+}
 
 
 export const _validateDetail=(arr,details)=>{
@@ -99,7 +105,7 @@ export default function contactReducer(state=initialState,{type,payload}){
                         first_name:payload.firstName,
                         last_name:payload.lastName,
                         email:payload.email,
-                        avatar_url:"https://robohash.org/quasimagnilaudantium.png?size=100x100&set=set1",
+                        avatar_url:`https://robohash.org/${payload.firstName}?size=100x100&set=set1`,
                         phone:payload.phone,
                     } 
                     oldContacts.push(details);
@@ -151,7 +157,28 @@ export default function contactReducer(state=initialState,{type,payload}){
            return {
               ...state,
               editDetails:{...state.editDetails,[payload.name]:payload.value}
-            }       
+            }   
+        case EDIT_DETAILS:
+            let contactDetails=state.contacts.map((ele)=>{
+                if(ele.id==payload.id){
+                    return{
+                        ['id']:payload.id,
+                        ['first_name']:payload.first_name,
+                        ['last_name']:payload.last_name,
+                        ['email']:payload.email,
+                        ['phone']:payload.phone,
+                        ['avatar_url']:payload.avatar_url,
+                    }
+                }
+                else
+                  return ele;
+            })
+            console.log("res",contactDetails)
+            localStorage.setItem("contact", JSON.stringify(contactDetails)) 
+            return{
+                ...state,
+                contacts:contactDetails
+            }   
         default:
             return state
     }

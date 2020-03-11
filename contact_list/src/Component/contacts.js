@@ -138,7 +138,7 @@ componentDidMount() {
                 <div className={classes.tableContainer}>
                <table className={`table table-striped`} onClick={this.hideAddContactForm}>
                    <tr>
-                    <th>Id</th>
+                    <th>No.</th>
                     <th>Avatar</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -150,7 +150,7 @@ componentDidMount() {
                             //    console.log(contact)
                                return(
                                    <tr className={classes.tr} key={index}>
-                                       <td><span>{contact.id}</span></td>
+                                       <td><span>{index+1}</span></td>
                                        <td><span><img src={contact.avatar_url} alt="avatar"/></span> </td>
                                        <td><span>{contact.first_name}</span><span> {contact['last_name']}</span></td>
                                        <td><span>{contact.email}</span></td>
