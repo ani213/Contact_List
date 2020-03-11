@@ -38,7 +38,7 @@ this.props.deleteContact(id)
 handleEdit=(contact)=>{
     let data=contact;
     data.YN=true
-    console.log("id",data)
+    // console.log("id",data)
 this.props.showEditForm(data)
 }
 componentDidMount() {
@@ -55,7 +55,7 @@ componentDidMount() {
     render() {
         let classes=this.props.classes
         let contacts=this.props.contacts.contacts;
-        // console.log(this.props.contacts,"contact") 
+        console.log(this.props.contacts,"contact") 
         return ( 
             <div>
                 <div className={`${classes.headingMainContainer}`}>

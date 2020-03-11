@@ -40,7 +40,7 @@ class AddContact extends Component {
   }
 componentDidMount(){
     setInterval( this.AutoclearError, (Auto_clear_interval*1000));
-    setInterval(this._Auto_clear_success,(10))
+    setInterval(this._Auto_clear_success,1)
 }
 
     render() { 

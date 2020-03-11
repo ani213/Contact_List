@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { showEditForm, editDetailsChange, editDetails } from './contactState';
+import { showEditForm, editDetailsChange, editDetails, clearSuccess, clearError } from './contactState';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import PulseLoader from './common/PulseLoader';
+const Auto_clear_interval=10;
 class EditContact extends Component {
-    state = {  }
+    state = { }
     handleCancle=()=>{
-        // this.props.showEditForm({id:"",YN:false})
-        setTimeout(this._cancle, 4000);
+        this.props.showEditForm({id:"",YN:false})
     }
    handleOnchange=(e)=>{
      this.props.editDetailsChange(e.target.name,e.target.value)
@@ -17,25 +17,37 @@ class EditContact extends Component {
    handleSave=()=>{
     this.props.editDetails(this.props.store.editDetails);
     // this.props.showEditForm({id:"",YN:false})
-    setTimeout(this._cancle, 4000);
    }
-  _cancle=()=>{
-    this.props.showEditForm({id:"",YN:false})
-  }
-
+   _Auto_clear_success=()=>{
+    if(this.props.store.success)
+    {
+        this.props.clearSuccess()
+        this.props.showEditForm({id:"",YN:false})
+ 
+    }
+   }
+   AutoclearError=()=>{
+    if(this.props.store.error){
+       this.props.clearError()
+    }
+}
+   componentDidMount(){
+    setInterval( this.AutoclearError, (Auto_clear_interval*1000));
+    setInterval(this._Auto_clear_success,1)
+   }
     render() { 
         let classes=this.props.classes
         let details=this.props.store.editDetails
-        let data={width:"100%",height:"100%",top:"0", animationDuration: "3s",}
-        let data1={width:"100%",height:"100%",top:"0", animationDuration: "5s",}
+        // let data={width:"100%",height:"100%",top:"0", animationDuration: "3s",}
+        // let data1={width:"100%",height:"100%",top:"0", animationDuration: "5s",}
 
-        // console.log(details,"details")
+        // console.log(this.props.store,"details")
         return ( 
             <div className={classes.mainContainer}>
                 <div className={classes.cancleButtonContainer}>
                     <IconButton onClick={this.handleCancle}><CloseIcon /></IconButton>
                 </div>
-            <div className={classes.formContainer}>
+            <div className={classes.formContainer} style={{animationDirection:`${this.state.YN?'reverse':'normal'}`}}>
                 <div>
                     <div>
                         <label>Name</label>
@@ -71,6 +83,7 @@ class EditContact extends Component {
                     </div>
                 </div>
                 <div className={classes.saveButtonContainer}>
+                { this.props.store.error && <p className={classes.fontColor}>{this.props.store.error} </p>}
                 <button type="button" className="btn btn-primary" onClick={this.handleSave}>Save</button>
                 </div>
             </div>
@@ -88,7 +101,7 @@ mainContainer:{
 },
 formContainer:{
     width:"300px",
-    height:"360px",
+    height:"395px",
     background:"#39ac73",
     padding:"20px",
     borderRadius:"15px",
@@ -111,8 +124,11 @@ saveButtonContainer:{
   },
   "100% ":{
       width:"300px",
-      height:"360px",
+      height:"395px",
   }
+},
+fontColor:{
+  color:"red"
 },
   
 })
@@ -126,8 +142,8 @@ const mapDispatchToProps={
     showEditForm,
     editDetailsChange,
     editDetails,
-
-
+    clearSuccess,
+    clearError
 
 } 
 
