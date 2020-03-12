@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import contacts from "../contact_list.json"
 import {connect} from "react-redux";
-import { setContacts, handleAddContactForm, deleteContact, showEditForm } from './contactState.js';
+import { setContacts, handleAddContactForm, deleteContact, showEditForm, sortingBy, reset } from './contactState.js';
 import {withStyles} from '@material-ui/core'
 import SearchInput from './common/searchInput.js';
 import AddContact from './AddContact.js';
@@ -9,9 +9,11 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import EditContact from './EditContact.js';
+import PulseLoader from './common/PulseLoader.js';
 class Contacts extends Component {
     state = { 
         search:"",
+        show:""
      }
 handleSearch=(e)=>{
     let search=e.target.value;
@@ -21,7 +23,7 @@ handleSearch=(e)=>{
     let localStorageData = JSON.parse(localStorage.getItem("contact"))
     let searchItem=localStorageData && localStorageData.filter((data)=>{
         // console.log(data.first_name)
-        if(data.first_name.toLowerCase().includes(search) || data.last_name.toLowerCase().includes(search)){
+        if(data.first_name.toLowerCase().includes(search) || data.last_name.toLowerCase().includes(search)||data.phone.split(" ").join('').includes(search)){
             return data
         }   
     })
@@ -42,6 +44,20 @@ handleEdit=(contact)=>{
     // console.log("id",data)
 this.props.showEditForm(data)
 }
+handleSorting=(sortBy)=>{
+    console.log("click")
+this.props.sortingBy(sortBy)
+this.handleDropdown();
+}
+handleDropdown=()=>{
+    this.setState({
+        show:`${this.state.show=='show'?"":'show'}`
+    })
+}
+reset=()=>{
+    this.props.reset(contacts);
+    // this.props.setContacts(contacts)
+}
 componentDidMount() {
 
     let localStorageData = JSON.parse(localStorage.getItem("contact"))
@@ -56,6 +72,10 @@ componentDidMount() {
     render() {
         let classes=this.props.classes
         let contacts=this.props.contacts.contacts;
+        let data=[{width: "92vw",height: "291px",animationDuration: "5s"},{width: "200px",height: "200px",animationDuration: "15s"},{ width: "92vw", height: "291px",animationDuration: "14s"},
+        { width: "92vw",height: "291px", animationDuration: "20s"},{ width: "92vw",height: "291px",animationDuration: "5s" }, {width: "92vw",height: "291px",animationDuration: "39s" },
+        {width: "92vw",height: "291px",animationDuration: "25s"},{ width: "92vw",height: "291px",animationDuration: "10s"},
+        { width: "92vw", height: "291px",animationDuration: "15s"},{ width: "9vw",height: "298px",animationDuration: "4s"}, ]
         // console.log(this.props.contacts,"contact") 
         return ( 
             <div>
@@ -64,64 +84,9 @@ componentDidMount() {
                       <h3>Contact List</h3>
                       <div className={classes.pulse_loader}>
                     </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "5s"
-                    }}></div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "200px",
-                        height: "200px",
-                        animationDuration: "15s"
-                    }}></div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "14s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "20s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "5s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "39s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "25s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "10s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "92vw",
-                        height: "291px",
-                        animationDuration: "15s"
-                    }}>
-                    </div>
-                    <div className={classes.pulse_loader} style={{
-                        width: "9vw",
-                        height: "298px",
-                        animationDuration: "4s"
-                    }}>
-                    </div>
+                    {data && data.map((ele,index)=>{
+                        return <PulseLoader style={ele} key={index}/>
+                    })}
                     </div>
                 </div>
                 <div className={classes.tableMainContainer}>
@@ -129,11 +94,25 @@ componentDidMount() {
                     <div className={classes.searchContainer}>
                     <SearchInput value={this.state.search} onChange={this.handleSearch}/>
                     </div>
+                      <div className="dropdown">
+                        <button className="btn btn-primary dropdown-toggle" type="button" onClick={this.handleDropdown}>
+                            Sort By
+                        </button>
+                        <div className={`dropdown-menu ${this.state.show} ${classes.menuContainer}`} >
+                            <span className={`dropdown-item ${classes.menu}`} onClick={()=>this.handleSorting("first_name")}>First Name</span>
+                            <span className={`dropdown-item ${classes.menu}`} onClick={()=>this.handleSorting("last_name")}>Last Name</span>
+                            <span className={`dropdown-item ${classes.menu}`} onClick={()=>this.handleSorting("email")}>Email</span>
+                        </div>
+                        </div>
+
                     <div >
                      <div className={classes.buttonContainer}>   
                       <button type="button" className={`btn btn-primary`} onClick={this.showAddContactForm}>Add contact</button>
                      </div>
                      {this.props.contacts.addContactYN && <AddContact />}
+                    </div>
+                    <div>
+                      <button type="button" className={`btn btn-primary`} onClick={this.reset}>Reset</button>
                     </div>
                 </div>
                 <div className={classes.tableContainer}>
@@ -176,17 +155,24 @@ const styles=theme=>({
     
     toolBarContainer:{
         display:"flex",
-        justifyContent:"space-between"
+        justifyContent:"space-around"
     },
     buttonContainer:{
-        marginRight:"350px"
+        // marginRight:"350px"
     },
     searchContainer: {
         width: "50%",
         margin: "0px 10px 19px 10px"
     },
+    menuContainer:{
+      top:"auto",
+      boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)",
+    },
+    menu:{
+        cursor:"pointer"
+    },
     tableContainer:{
-        position:"relative"
+        position:"relative",
     },
     tableMainContainer: {
         boxShadow:'0 0 1px 1px #ccc',
@@ -276,6 +262,9 @@ const mapDispatchToProps={
     handleAddContactForm,
     deleteContact,
     showEditForm,
+    sortingBy,
+    reset,
+
 
 }
 export default withStyles(styles)(connect(mapStateToProps,mapDispatchToProps)(Contacts));

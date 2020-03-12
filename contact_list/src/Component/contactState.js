@@ -1,4 +1,3 @@
-
 export const initialState={
      contacts:[],
      addContactYN:false,
@@ -15,7 +14,9 @@ export const DELETE_CONTACT='DELETE_CONTACT';
 export const CLEAR_SUCCESS='CLEAR_SUCCESS';
 export const SHOW_EDIT_FORM="SHOW_EDIT_FORM";
 export const EDIT_DETAILS_CHANGE="EDIT_DETAILS_CHANGE";
-export const EDIT_DETAILS="EDIT_DETAILS"
+export const EDIT_DETAILS="EDIT_DETAILS";
+export const SORTING='SORTING';
+export const RESET="RESET";
 
 export const setContacts=(contacts)=>dispatch=>{
 dispatch({
@@ -70,6 +71,18 @@ export const editDetails=(data)=>dispatch=>{
     })
 }
 
+export const sortingBy=(data)=>dispatch=>{
+    dispatch({
+        type:SORTING,
+        payload:data
+    })
+}
+export const reset=(contact)=>dispatch=>{
+    dispatch({
+        type:RESET,
+        payload:contact
+    })
+}
 
 export const _validateDetail=(arr,details)=>{
          for(let i=0;i<arr.length;i++){
@@ -170,13 +183,12 @@ export default function contactReducer(state=initialState,{type,payload}){
                         ['last_name']:payload.last_name,
                         ['email']:payload.email,
                         ['phone']:payload.phone,
-                        ['avatar_url']:payload.avatar_url,
+                        ['avatar_url']:`https://robohash.org/${payload.first_name}?size=100x100&set=set1`,
                     }
                 }
                 else
                   return ele;
             })
-            console.log("res",contactDetails)
             localStorage.setItem("contact", JSON.stringify(contactDetails)) 
         
             return{
@@ -184,12 +196,25 @@ export default function contactReducer(state=initialState,{type,payload}){
                 contacts:contactDetails,
                 success:true,
             }   
-        }else{
+             }else{
+                 return{
+                     ...state,
+                      error:`${result} should not be empty`
+                    }
+        }
+        case SORTING:
+            let contactsData=state.contacts.sort((a,b)=>(a[payload].toLowerCase() > b[payload].toLowerCase()) ? 1 : ((b[payload].toLowerCase() > a[payload].toLowerCase()) ? -1 : 0))
+            console.log(contactsData,payload)
             return{
                 ...state,
-                error:`${result} should not be empty`
+                contacts:contactsData
             }
-        }
+        case RESET:
+                localStorage.setItem("contact", JSON.stringify(payload))
+                return{
+                    ...state,
+                    contacts:payload
+                }
         default:
             return state
     }
