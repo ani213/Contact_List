@@ -18,11 +18,12 @@ handleSearch=(e)=>{
     this.setState({
         search:e.target.value
     })
-    let searchItem=contacts.filter((data)=>{
+    let localStorageData = JSON.parse(localStorage.getItem("contact"))
+    let searchItem=localStorageData && localStorageData.filter((data)=>{
         // console.log(data.first_name)
         if(data.first_name.toLowerCase().includes(search) || data.last_name.toLowerCase().includes(search)){
             return data
-        }
+        }   
     })
         this.props.setContacts(searchItem)
 }
@@ -55,7 +56,7 @@ componentDidMount() {
     render() {
         let classes=this.props.classes
         let contacts=this.props.contacts.contacts;
-        console.log(this.props.contacts,"contact") 
+        // console.log(this.props.contacts,"contact") 
         return ( 
             <div>
                 <div className={`${classes.headingMainContainer}`}>
